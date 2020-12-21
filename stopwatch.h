@@ -49,6 +49,8 @@ private:
     QProgressBar* mProgressBar;
 
     QString mAnnouncement;
+
+    void resizeEvent(QResizeEvent*);
 };
 
 #endif // STOPWATCH_H

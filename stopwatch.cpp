@@ -1,20 +1,42 @@
 #include "stopwatch.h"
-
+#include <QPixmap>
 
 StopWatch :: StopWatch(QWidget * parent, qint64 timeLimit, QString ment)
     : QWidget(parent)
     , mRunning(false)
     , mStartTime()
-    , mLabel(new QLabel("00:00:00"))
-    , mStart(new QPushButton("시작"))
-    , mPause(new QPushButton("일시정지"))
-    , mStop(new QPushButton("정지"))
     , mProgressBar(new QProgressBar())
 {
     mTimeLimit = timeLimit;
     mAnnouncement = ment;
+    mLabel = new QLabel("00:00:00");
+
+    mStart = new QPushButton();
+    QPixmap startImg("./play.svg");
+    QIcon startIcon(startImg);
+    mStart->setIcon(startIcon);
+    mStart->setIconSize(QSize(100,100));
+    mStart->setFlat(true);
+
+
+    mPause = new QPushButton();
+    QPixmap pauseImg("./pause.svg");
+    QIcon pauseIcon(pauseImg);
+    mPause->setIcon(pauseIcon);
+    mPause->setIconSize(QSize(100,100));
+    mPause->setFlat(true);
+
+    mStop = new QPushButton();
+    QPixmap stopImg("./stop.svg");
+    QIcon stopIcon(stopImg);
+    mStop->setIcon(stopIcon);
+    mStop->setIconSize(QSize(100,100));
+    mStop->setFlat(true);
+
+
 
     QGridLayout * gridLayout = new QGridLayout(this);
+
 
     gridLayout->addWidget(mLabel,   0, 0, 1, 3);
     gridLayout->addWidget(mProgressBar,   1, 0, 1, 3);
@@ -26,7 +48,7 @@ StopWatch :: StopWatch(QWidget * parent, qint64 timeLimit, QString ment)
     connect(mPause, SIGNAL(clicked()), SLOT(pause()));
     connect(mStop, SIGNAL(clicked()), SLOT(stop()));
 
-    QFont font("Arial", 50, QFont::Bold);
+    QFont font("Arial", this->size().height()*2, QFont::Bold);
 
 
     QPalette palette = mLabel->palette();
@@ -197,3 +219,8 @@ void StopWatch::setMentSlot(QString ment)
     mAnnouncement = ment;
 }
 
+void StopWatch::resizeEvent(QResizeEvent*)
+{
+    QFont font("Arial", this->size().height()/5, QFont::Bold);
+    mLabel->setFont(font);
+}
