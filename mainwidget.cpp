@@ -17,5 +17,5 @@ mainWidget::mainWidget()
     gridLayout->addWidget(mList,   3, 0, 1, 1);
 
     connect(mList, SIGNAL(timeLimitSignal(int)), mTimer, SLOT(setTimeSlot(int)));
-    connect(mList, SIGNAL(mentSettingSignal(QString)), mTimer, SLOT(setMentSlot(QString)));
+    connect(mList, SIGNAL(mentSettingSignal(QString, QString, bool)), mTimer, SLOT(setMentSlot(QString, QString, bool)));
 }

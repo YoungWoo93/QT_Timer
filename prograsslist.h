@@ -33,7 +33,7 @@ public:
 
 signals:
     void timeLimitSignal(int);
-    void mentSettingSignal(QString);
+    void mentSettingSignal(QString, QString, bool);
 
 public slots:
     void addNode();
@@ -42,7 +42,7 @@ public slots:
     void itemStart();
     void itemFix();
     void itemDelete();
-    void setNodeValue(QString name, int time, QString annunce, QString memo);
+    void setNodeValue(QString name, int time, QString annunce, QString memo, bool sMent, bool eMent, bool tMent);
 
     void ShowContextMenu(const QPoint&);
 private:

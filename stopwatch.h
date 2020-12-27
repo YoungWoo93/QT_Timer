@@ -10,6 +10,9 @@
 #include <QProgressBar>
 
 #include <iostream>
+#include <QPixmap>
+#include <QSound>
+
 #include "sapi.h"
 
 class StopWatch : public QWidget
@@ -24,7 +27,7 @@ public slots:
     void pause(void);
     void stop(void);
     void setTimeSlot(int);
-    void setMentSlot(QString ment);
+    void setMentSlot(QString ment, QString endMent, bool timeMent);
 
 protected:
     void timerEvent(QTimerEvent *);
@@ -49,6 +52,12 @@ private:
     QProgressBar* mProgressBar;
 
     QString mAnnouncement;
+    QString mEndAnnouncement;
+    bool mTimeAnnouncement;
+
+    bool check30;
+    bool checkR60;
+    bool checkR30;
 
     void resizeEvent(QResizeEvent*);
 };

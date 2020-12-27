@@ -17,7 +17,7 @@
 #include <QListWidgetItem>
 #include <QMenu>
 #include <QTextEdit>
-
+#include <QCheckBox>
 class optionEditBox : public QWidget
 {
     Q_OBJECT
@@ -29,12 +29,14 @@ public:
     QTextEdit* annoEdit;
     QTextEdit* memoEdit;
     QPushButton* submit;
-
+    QCheckBox* startMentCheck;
+    QCheckBox* endMentCheck;
+    QCheckBox* timeMentCheck;
 public slots:
     void inputButton(void);
 
 signals:
-    void inputButtonSignal(QString, int, QString, QString);
+    void inputButtonSignal(QString, int, QString, QString, bool, bool, bool);
 
 
 

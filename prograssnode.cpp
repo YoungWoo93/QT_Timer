@@ -7,8 +7,8 @@ prograssNode::prograssNode(int no, QWidget * parent)
     mTime = 180;
     nodeNo = no;
     mName = "이름";
-    mAnnouncement = "멘트를 넣어주세요";
-    mMemo = "메모";
+    mAnnouncement = "시작 멘트를 넣어주세요";
+    mMemo = "종료 멘트를 넣어주세요";
 
     mIsSelect = false;
 
@@ -25,6 +25,10 @@ prograssNode::prograssNode(int no, QWidget * parent)
 
     vBoxLayout->addWidget(mNameLabel);
     vBoxLayout->addWidget(mTimeLabel);
+
+    startMent = false;
+    endMent = false;
+    timeMent = false;
 
  }
 
@@ -113,6 +117,32 @@ QString prograssNode::getMemo()
     return mMemo;
 }
 
+void prograssNode::setStartMent(bool sMent)
+{
+    startMent = sMent;
+}
+bool prograssNode::getStartMent()
+{
+    return startMent;
+}
+
+void prograssNode::setEndMent(bool eMent)
+{
+    endMent = eMent;
+}
+bool prograssNode::getEndMent()
+{
+    return endMent;
+}
+
+void prograssNode::setTimeMent(bool tMent)
+{
+    timeMent = tMent;
+}
+bool prograssNode::getTimeMent()
+{
+    return timeMent;
+}
 
 
 int prograssNode::getNodeNumber()

@@ -1,5 +1,4 @@
 #include "stopwatch.h"
-#include <QPixmap>
 
 StopWatch :: StopWatch(QWidget * parent, qint64 timeLimit, QString ment)
     : QWidget(parent)
@@ -10,6 +9,11 @@ StopWatch :: StopWatch(QWidget * parent, qint64 timeLimit, QString ment)
     mTimeLimit = timeLimit;
     mAnnouncement = ment;
     mLabel = new QLabel("00:00:00");
+    check30 = false;
+    checkR60 = false;
+    checkR30 = false;
+
+
 
     mStart = new QPushButton();
     QPixmap startImg("./play.svg");
@@ -105,8 +109,40 @@ void StopWatch :: stop(void)
     mStart->setEnabled(true);
     mPause->setEnabled(false);
     mStop->setEnabled(false);
-    mLabel->setText(QString("[%1 sec used]")
-            .arg(usedTime / 1000));
+
+    check30 = false;
+    checkR60 = false;
+    checkR30 = false;
+
+    if(usedTime <= 1000)
+    {
+        mLabel->setText(QString("정지"));
+    }
+    else if(usedTime >= 60000)
+    {
+        mLabel->setText(QString("[%1 분 %2 초]")
+                        .arg(usedTime / 60000)
+                        .arg(usedTime % 60000 / 1000));
+
+        if(mTimeAnnouncement)
+            speak(QString("[%1 분 %2 초 발언 하였습니다.]")
+              .arg(usedTime / 60000)
+              .arg(usedTime % 60000 / 1000));
+
+        speak(mEndAnnouncement);
+    }
+    else
+    {
+        mLabel->setText(QString("[%1 초]")
+                        .arg(usedTime / 1000));
+
+        if(mTimeAnnouncement)
+            speak(QString("[%1 초 발언 하였습니다.]")
+              .arg(usedTime / 1000));
+
+        speak(mEndAnnouncement);
+    }
+
     mRunning = false;
     mProgressBar->setValue(0);
 
@@ -115,8 +151,6 @@ void StopWatch :: stop(void)
 
 QString StopWatch :: getTimeStr(qint64 time)
 {
-    time = mTimeLimit - time;
-
     unsigned int h = time / 3600;
     unsigned int m = (time / 60) - (h * 60);
     unsigned int s = time - (m * 60) - (h * 3600);
@@ -139,8 +173,31 @@ void StopWatch ::timerEvent(QTimerEvent *)
         QString diff;
         mProgressBar->setValue(mProgressBar->value() + mSessionTime);
 
+        if(mProgressBar->value() / 1000 == 30 && !check30)
+        {
+            QSound::play("./30초.wav");
+            check30 = true;
+        }
+        if(mProgressBar->value() / 1000 == mTimeLimit - 60 && !checkR60)
+        {
+            QSound::play("./60초전.wav");
+            checkR60 = true;
+        }
+        if(mProgressBar->value() / 1000 == mTimeLimit - 30 && !checkR30)
+        {
+            QSound::play("./30초전.wav");
+            checkR30 = true;
+        }
+
+
+
+
         if(mProgressBar->value() / 1000 >= mTimeLimit)
         {
+            check30 = false;
+            checkR60 = false;
+            checkR30 = false;
+
             diff = QString("시간 종료");
             mRunning = false;
             mLabel->setText(diff);
@@ -165,7 +222,7 @@ void StopWatch ::setmTimeLimit(qint64 time)
 {
     mTimeLimit = time;
 
-    mLabel->setText(getTimeStr(mTimeLimit));
+    mLabel->setText(getTimeStr(mProgressBar->value() / 1000));
     mProgressBar->setMinimum(0);
     mProgressBar->setMaximum(mTimeLimit * 1000);
 }
@@ -214,9 +271,11 @@ void StopWatch::speak(std::wstring str)
     }
 }
 
-void StopWatch::setMentSlot(QString ment)
+void StopWatch::setMentSlot(QString ment, QString endMent, bool timeMent)
 {
     mAnnouncement = ment;
+    mEndAnnouncement = endMent;
+    mTimeAnnouncement = timeMent;
 }
 
 void StopWatch::resizeEvent(QResizeEvent*)

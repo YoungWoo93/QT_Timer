@@ -32,6 +32,15 @@ public:
     void setMemo(QString memo);
     QString getMemo();
 
+    void setStartMent(bool sMent);
+    bool getStartMent();
+
+    void setEndMent(bool eMent);
+    bool getEndMent();
+
+    void setTimeMent(bool tMent);
+    bool getTimeMent();
+
     int getNodeNumber();
 
 private :
@@ -47,6 +56,9 @@ private :
     QLabel *    mTimeLabel;
     QRect *     mBox;
 
+    bool        startMent;
+    bool        endMent;
+    bool        timeMent;
 
     virtual void paintEvent(QPaintEvent *event);
 };

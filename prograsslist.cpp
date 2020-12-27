@@ -35,7 +35,7 @@ prograssList::prograssList(mainWidget * p)
     hBoxLayout->addWidget(addButton);
 
     connect(addButton, SIGNAL(clicked()), SLOT(addNode()));
-    connect(editBox, SIGNAL(inputButtonSignal(QString, int, QString, QString)), this, SLOT(setNodeValue(QString, int, QString, QString)));
+    connect(editBox, SIGNAL(inputButtonSignal(QString, int, QString, QString, bool, bool, bool)), this, SLOT(setNodeValue(QString, int, QString, QString, bool, bool, bool)));
 //    connect(editBox->submit, SIGNAL(clicked()), editBox, SLOT(inputButton()));
     connect(editBox->submit,&QPushButton::clicked,editBox,&optionEditBox::inputButton);
     connect(list, SIGNAL(itemClicked(QListWidgetItem *)), SLOT(itemSelect(QListWidgetItem *)));
@@ -71,10 +71,25 @@ void prograssList::itemSelect(QListWidgetItem * item)
 
     node->click();
     int time = node->getTime();
-    QString ment = node->getAnnouncement();
 
-    emit mentSettingSignal(ment);
+    QString ment;
+    QString eMent;
+
+    if(node->getStartMent())
+        ment = node->getAnnouncement();
+    else
+        ment = " ";
+
+    if(node->getEndMent())
+        eMent = node->getMemo();
+    else
+        eMent = " ";
+
+    bool tMent = node->getTimeMent();
+
+    emit mentSettingSignal(ment, eMent, tMent);
     emit timeLimitSignal(time);
+
 }
 
 void prograssList::itemStart()
@@ -90,7 +105,9 @@ void prograssList::itemFix()
     editBox->timeEdit->setText(QString::number(node->getTime()));
     editBox->annoEdit->setText(node->getAnnouncement());
     editBox->memoEdit->setText(node->getMemo());
-
+    editBox->startMentCheck->setChecked(node->getStartMent());
+    editBox->endMentCheck->setChecked(node->getEndMent());
+    editBox->timeMentCheck->setChecked(node->getTimeMent());
 
 
     editBox->editBox->show();
@@ -121,7 +138,7 @@ void prograssList::ShowContextMenu(const QPoint& pos)
     submenu->exec(globalPos);
 }
 
-void prograssList::setNodeValue(QString name, int time, QString annunce, QString memo)
+void prograssList::setNodeValue(QString name, int time, QString annunce, QString memo, bool sMent, bool eMent, bool tMent)
 {
     prograssNode* node = (prograssNode*)list->itemWidget(list->selectedItems()[0]);
 
@@ -129,5 +146,8 @@ void prograssList::setNodeValue(QString name, int time, QString annunce, QString
     node->setTime(time);
     node->setAnnouncement(annunce);
     node->setMemo(memo);
+    node->setStartMent(sMent);
+    node->setEndMent(eMent);
+    node->setTimeMent(tMent);
 }
 
